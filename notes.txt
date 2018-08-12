@@ -1,0 +1,9 @@
+CSet = cell(1,2);
+RSet = cell(1,2);
+CSet{1,1} = [0 0 0]';
+RSet{1,1} = eye(3);
+CSet{1,2} = t';
+RSet{1,2} = r;
+plotC(CSet, RSet, .01 )
+R = r';
+T = -r' * t';

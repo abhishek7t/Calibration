@@ -1,0 +1,7 @@
+CSet{1,1} = [0 0 0]';
+RSet{1,2} = ee;
+CSet{1,2} = t';
+RSet{1,2} = r;
+plotC(CSet, RSet, .01 )
+R = r';
+T = -r' * t';
