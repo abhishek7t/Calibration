@@ -45,7 +45,7 @@ classdef Calibration
                 reproj = Calibration.findReproj(points,eye(3),[0 0 0]',K1');
                 reprojError = Calibration.reprojError(points, undistortedPoints1,eye(3),[0 0 0]',K1');
                 
-%                 rep = Calibration.findReproj(points,r',r * t' * .8,K2');sanityCheck(300,rep,data);
+%                 rep = Calibration.findReproj(points,r',-r' * t',K2');sanityCheck(300,rep,data);
                 
                 norms = sum((diff(points) .^ 2),2) .^ .5;
                 avg = mean(norms);
