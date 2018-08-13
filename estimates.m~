@@ -23,7 +23,7 @@ function [H3, calibParams, p2, p3] = estimates(data)
         %check the following
 %         x = worldToImage(calibParams{1, 2}, r, t , loc(49).points, 'ApplyDistortion', true);
 %         sanityCheck(299,x,data);
-       
+        H
         for f = 1 : length(match)
             frame = match(f,1) - 250 * (pair(1) - 1);
             p2(pair(1),frame) = 1;

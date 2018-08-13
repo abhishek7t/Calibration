@@ -38,21 +38,19 @@ classdef Calibration
                 points =triangulate(undistortedPoints1,undistortedPoints2,params);
                 
                 %find reprojection error
-                K1 = params.CameraParameters1.IntrinsicMatrix ;
-                K2 = params.CameraParameters2.IntrinsicMatrix ;
-                r = params.RotationOfCamera2;
-                t = params.TranslationOfCamera2;
-                reproj = Calibration.findReproj(points,eye(3),[0 0 0]',K1');
-                reprojError = Calibration.reprojError(points, undistortedPoints1,eye(3),[0 0 0]',K1');
-                
-%                 rep = Calibration.findReproj(points,r',-r' * t',K2');sanityCheck(300,rep,data);
+                R = params.RotationOfCamera2;
+                T = params.TranslationOfCamera2;
+                reproj = worldToImage(params.CameraParameters2, R, T , points,'ApplyDistortion', true);
+                reprojError = imagePoints(:,:,img,2) - reproj;
+                meanReprojectionError = norm(mean(reprojError));
+
                 
                 norms = sum((diff(points) .^ 2),2) .^ .5;
                 avg = mean(norms);
                 nbr55 = (norms < avg);
                 norms = norms(nbr55);
                 avg = mean(norms);
-                if abs(avg-55)<0.7 && reprojError < 5
+                if abs(avg-55)<0.7 && meanReprojectionError < 5
                     inliers(img) = 1;
                 end
             end
@@ -112,7 +110,7 @@ classdef Calibration
 
             range = [250*(i-1)+1+iCor(1) 250*(i)+iCor(2)];
         end
-        %%
+        %% returns distorted image points (unchanged image points)
         function [inlierPoints,match] = getInliersRansac(cams,data)
             boardSize = [10 12];
             squareSize = 55;
