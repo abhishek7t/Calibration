@@ -60,18 +60,12 @@ classdef Calibration
         function loc = findLoc(points3D,H)
             np = struct;
             for j = 1 : length(points3D)
-            %         camPair = points3D(cam{i});
                 points = points3D(j).points;
 
                 if isempty(points)
                     np(j).points = [];
                 else
-                    np(j).points = zeros(length(points),3);
-                    for k = 1:length(points)
-                        xyz = points(k,:)';
-                        xyz = H*[xyz;1];
-                        np(j).points(k,:)=xyz(1:3)';
-                    end
+                    np(j).points = [points ones(length(points), 1)] * [H(1:3,1:3)';H(1:3,4)'] ;
                 end
             end
             loc = np;
@@ -118,7 +112,7 @@ classdef Calibration
             worldPoints = generateCheckerboardPoints(boardSize,squareSize);
         
 
-            match = Calibration.findMatchingCorners(Calibration.findRange(cams(1)), Calibration.findRange(cams(2)), data)
+            match = Calibration.findMatchingCorners(Calibration.findRange(cams(1)), Calibration.findRange(cams(2)), data);
             n = length(match);
             imagePoints = zeros(99,2,n,2);
             for i = 1:n

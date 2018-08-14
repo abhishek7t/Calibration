@@ -29,6 +29,9 @@ imagePoints = worldToImage(cameraParams,'ApplyDistortion',distort) returns the p
 for pair (1,2)
 x = worldToImage(calibParams{1, 2}, eye(3), [0 0 0], points3D(13).points, 'ApplyDistortion', true);
 sanityCheck(263,x,data);
+      %check the following
+x = worldToImage(calibParams{1, 2}, r, t , loc(49).points, 'ApplyDistortion', true);
+sanityCheck(299,x,data);
 
 
 #verified
@@ -40,3 +43,28 @@ sanityCheck(263,x,data);
 #verified
 x = worldToImage(calibParams{1, 1}, H(1:3,1:3) * r, t - H(1:3,4)'*H(1:3,1:3)*r, points3D(15).points * H(1:3,1:3)' + tr, 'ApplyDistortion', true);
 sanityCheck(15,x,data);
+
+%%for pair (3, 4)
+x = worldToImage(calibParams{1, 3}, eye(3), [0 0 0], points3D(619-500).points , 'ApplyDistortion', true);
+sanityCheck(619,x,data);
+
+ x = worldToImage(calibParams{1, 4}, r, t, points3D(619-500).points , 'ApplyDistortion', true);
+sanityCheck(869,x,data)
+
+%%for pair (4, 5)
+H = H3{4};
+tr = [ones(99,1)*H(1,4) ones(99,1)*H(2,4) ones(99,1)*H(3,4)];
+x = worldToImage(calibParams{1, 4}, H(1:3,1:3), -H(1:3,4)'*H(1:3,1:3), points3D(891 - 250*3).points * H(1:3,1:3)' + tr, 'ApplyDistortion', true);
+sanityCheck(891,x,data);
+
+x = worldToImage(calibParams{1, 5}, H(1:3,1:3)*r, t -H(1:3,4)'*H(1:3,1:3)*r, points3D(891 - 250*3).points * H(1:3,1:3)' + tr, 'ApplyDistortion', true);
+sanityCheck(1141,x,data);
+
+%%for pair (5, 6)
+H = H3{5};
+tr = [ones(99,1)*H(1,4) ones(99,1)*H(2,4) ones(99,1)*H(3,4)];
+x = worldToImage(calibParams{1, 5}, H(1:3,1:3), -H(1:3,4)'*H(1:3,1:3), points3D(1178 - 250*4).points * H(1:3,1:3)' + tr, 'ApplyDistortion', true);
+sanityCheck(1178,x,data);
+
+x = worldToImage(calibParams{1, 6}, H(1:3,1:3)*r, t - H(1:3,4)'*H(1:3,1:3)*r, points3D(1178 - 250*4).points * H(1:3,1:3)' + tr, 'ApplyDistortion', true);
+sanityCheck(1178+250,x,data);
