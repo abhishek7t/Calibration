@@ -95,7 +95,6 @@ mean(P1-P2)
 camera to world
 [p3Dp2(96).points ones(99,1)] * inv([R1' T1;0 0 0 1]')
 H1 = [R1' T1; 0 0 0 1]; H2 = [R2' T2; 0 0 0 1];
-world to camera
 P1 = [p3Dp1(96).points ones(99,1)] * (H2 * H1)';
 P1 = P1(:,1:3);
 x = worldToImage(calibParams{1, 1}, eye(3), [0 0 0], P1 , 'ApplyDistortion', true);
