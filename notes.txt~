@@ -95,32 +95,7 @@ mean(P1-P2)
 camera to world
 [p3Dp2(96).points ones(99,1)] * inv([R1' T1;0 0 0 1]')
 H1 = [R1' T1; 0 0 0 1]; H2 = [R2' T2; 0 0 0 1];
-world to camera
 P1 = [p3Dp1(96).points ones(99,1)] * (H2 * H1)';
 P1 = P1(:,1:3);
 x = worldToImage(calibParams{1, 1}, eye(3), [0 0 0], P1 , 'ApplyDistortion', true);
 sanityCheck(96,x,data);
-<<<<<<< HEAD
-
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-BA Notes %%%%%%%%%%%%%%%%
-Hs is  world to camera transformation matrix
-Hs = inv(HSet{1});
-x = worldToImage(estimate.calibParams{1, 1}, Hs(1:3, 1:3)', (Hs(1:3,4))', estimate.p3{13} , 'ApplyDistortion', true);
-sanityCheck(13,x,data);
-
-Hs = inv(HSet{6});
-x = worldToImage(estimate.calibParams{1, 6}, Hs(1:3, 1:3)', (Hs(1:3,4))', estimate.p3{245} , 'ApplyDistortion', true);
-sanityCheck(245 + 5 * 250,x,data);
-
-%%%%%%%%%%%%% after ba %%%%%%%%%
-P = X(12 * 99 +1:13*99,:);
-Hs = inv(H{1});
-x = worldToImage(estimate.calibParams{1, 1}, Hs(1:3, 1:3)', (Hs(1:3,4))', P , 'ApplyDistortion', true);
-sanityCheck(13,x,data);
-
-sanityCheck(245 + 5 * 250,reprojection{6, 245},data);
-=======
->>>>>>> 5644f242fed247ca9baa4de52028c0895f9572bc

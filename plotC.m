@@ -1,6 +1,11 @@
 function [] = plotC( Cset, Rset, scale )
+<<<<<<< HEAD
     Colors = ['g', 'b', 'k' , 'm', 'c', 'r','g', 'b', 'k' , 'm', 'c', 'r'];
     labels = ['1', '2', '3', '4', '5', '6','7','8','9','10'];
+=======
+    Colors = ['g', 'b', 'k' , 'm', 'c', 'r'];
+    labels = ['1', '2', '3', '4', '5', '6'];
+>>>>>>> 5644f242fed247ca9baa4de52028c0895f9572bc
     figure;
     hold on; grid on
 
