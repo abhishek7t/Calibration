@@ -1,0 +1,66 @@
+CSet = cell(1,5);
+RSet = cell(1,5);
+CSet{3} = [0 0 0]';
+RSet{3} = eye(3);
+CSet{2} = H(1:3,4);
+RSet{2} = H(1:3,1:3);
+CSet{1} = CSet{2} + r' * t';
+RSet{1} = RSet{2} * r;
+CSet{4} = Hp3(1:3,4);
+RSet{4} = Hp3(1:3,1:3);
+Hp4 = HSet{4};
+rp4 = Hp4(1:3,1:3); tp4 = Hp4(1:3,4);
+CSet{1} = CSet{4} + rp4' * tp4';
+Error using  * 
+Inner matrix dimensions must agree.
+ 
+CSet{1} = CSet{4} + rp4' * tp4;
+RSet{1} = RSet{4} * rp4;
+plotC(CSet, RSet, .01);
+Error using plotCamera>parseInputs (line 176)
+The value of 'Location' is invalid. Expected Location to be a vector.
+
+Error in plotCamera (line 104)
+params = parseInputs(varargin{:});
+
+Error in plotC (line 10)
+        plotCamera('Location',Cset{i}*scale,'Orientation',Rset{i},'Opacity',0, 'Color', Colors(i));
+ 
+CSet
+
+CSet =
+
+  1×5 cell array
+
+    [3×1 double]    [3×1 double]    [3×1 double]    [3×1 double]    []
+
+CSet{5} = CSet{4} + rp4' * tp4';
+Error using  * 
+Inner matrix dimensions must agree.
+ 
+CSet{5} = CSet{4} + rp4' * tp4;
+RSet{5} = RSet{4} * rp4;
+CSet{1} = CSet{2} + r' * t';
+RSet{1} = RSet{2} * r;
+CSet
+
+CSet =
+
+  1×5 cell array
+
+    [3×1 double]    [3×1 double]    [3×1 double]    [3×1 double]    [3×1 double]
+
+plotC(CSet, RSet, .01);
+
+
+
+
+> CSet = cell(1,5);RSet = cell(1,5);
+>> CSet{3} = [0 0 0]'; RSet{3} = eye(3);
+>> Hp1 = HSet{1};
+>> CSet{2} = Hp1(1:3,4); RSet{2} = Hp1(1:3,1:3);
+>> H21 = HSet{2}; CSet{1} = H21(1:3,4) + RSet{2}' * CSet{2};
+>> RSet{1} = RSet{2} * H21(1:3,1:3);
+>> H34 = HSet{3}; CSet{4} = H34(1:3,4); RSet{4} = H34(1:3,1:3);
+>> H45 = HSet{4}; CSet{5} = H45(1:3,4) + H45(1:3,1:3)' * CSet{4}; RSet{5} = RSet{4} * H45(1:3,1:3);
+>> H21 = HSet{2}; CSet{1} = H21(1:3,4) + H21(1:3,1:3)' * CSet{2};

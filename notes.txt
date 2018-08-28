@@ -68,3 +68,56 @@ sanityCheck(1178,x,data);
 
 x = worldToImage(calibParams{1, 6}, H(1:3,1:3)*r, t - H(1:3,4)'*H(1:3,1:3)*r, points3D(1178 - 250*4).points * H(1:3,1:3)' + tr, 'ApplyDistortion', true);
 sanityCheck(1178+250,x,data);
+
+
+%%%%%%%%%%%%%%%%%%%%
+K1 = calibParams{1, 1}.IntrinsicMatrix ;K2 = calibParams{1, 2}.IntrinsicMatrix ; K1 = K1'; K2 = K2';
+H = HSet{2}; R = H(1:3,1:3); T = H(1:3,4); p3D = points3DSet{2};
+x1 = worldToImage(calibParams{1, 1}, R, T', p3D(13).points , 'ApplyDistortion', false);
+M1 = K1 * [R'  T]; rep = M1 * [p3D(13).points(1,:) 1]'; rep = rep/rep(3); rep = rep'
+%%%%%%%%%%%%%%%%%%%%%
+
+>>  H = HSet{1}; R = H(1:3,1:3); T = H(1:3,4); p3D = points3DSet{1};
+>> x2 = worldToImage(calibParams{1, 2}, R, T', p3D(49).points , 'ApplyDistortion', false);
+>> K3 = calibParams{1, 3}.IntrinsicMatrix ;K2 = calibParams{1, 2}.IntrinsicMatrix ; K3 = K3'; K2 = K2';
+M2 = K2 * [R'  T]; rep = M2 * [p3D(49).points(1,:) 1]'; rep = rep/rep(3); rep = rep'
+
+
+
+[H3, calibParams, p2, p3, matchSet, points3DSet, HSet] = estimates(data,calib);
+ H1 = HSet{1}; R1 = H1(1:3,1:3); T1 = H1(1:3,4); p3Dp1 = points3DSet{1};
+ H2 = HSet{2}; R2 = H2(1:3,1:3); T2 = H2(1:3,4); p3Dp2 = points3DSet{2};
+ K1 = calibParams{1, 1}.IntrinsicMatrix ;K2 = calibParams{1, 2}.IntrinsicMatrix ; K1 = K1'; K2 = K2';
+ P1 = [p3Dp1(96).points ones(99,1)] * [R1;T1'];
+ P2 = p3Dp2(96).points ;
+mean(P1-P2)
+
+camera to world
+[p3Dp2(96).points ones(99,1)] * inv([R1' T1;0 0 0 1]')
+H1 = [R1' T1; 0 0 0 1]; H2 = [R2' T2; 0 0 0 1];
+world to camera
+P1 = [p3Dp1(96).points ones(99,1)] * (H2 * H1)';
+P1 = P1(:,1:3);
+x = worldToImage(calibParams{1, 1}, eye(3), [0 0 0], P1 , 'ApplyDistortion', true);
+sanityCheck(96,x,data);
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+BA Notes %%%%%%%%%%%%%%%%
+Hs is  world to camera transformation matrix
+Hs = inv(HSet{1});
+x = worldToImage(estimate.calibParams{1, 1}, Hs(1:3, 1:3)', (Hs(1:3,4))', estimate.p3{13} , 'ApplyDistortion', true);
+sanityCheck(13,x,data);
+
+Hs = inv(HSet{6});
+x = worldToImage(estimate.calibParams{1, 6}, Hs(1:3, 1:3)', (Hs(1:3,4))', estimate.p3{245} , 'ApplyDistortion', true);
+sanityCheck(245 + 5 * 250,x,data);
+
+%%%%%%%%%%%%% after ba %%%%%%%%%
+P = X(12 * 99 +1:13*99,:);
+Hs = inv(H{1});
+x = worldToImage(estimate.calibParams{1, 1}, Hs(1:3, 1:3)', (Hs(1:3,4))', P , 'ApplyDistortion', true);
+sanityCheck(13,x,data);
+
+sanityCheck(245 + 5 * 250,reprojection{6, 245},data);

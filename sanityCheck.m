@@ -5,8 +5,11 @@ function [ ] = sanityCheck(frame,reproj,data)
    
     img1 = imread(data(frame).name);
     figure(1)
-    imshow(insertMarker(img1,data(frame).corners(:,:))); 
-    figure(2)
-    imshow(insertMarker(img1,reproj)); 
+%     imshow(insertMarker(img1,data(frame).corners(:,:))); 
+%     figure(2)
+%     imshow(insertMarker(img1,reproj,'color','r')); 
+    img = insertMarker(img1,data(frame).corners(:,:), 'color','g');
+    img = insertMarker(img,reproj,'color','r');
+    imshow(img);
 end
 

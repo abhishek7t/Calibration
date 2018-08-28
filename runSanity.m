@@ -1,5 +1,5 @@
 cam = 3;
-[H3, calibParams, p2, p3, matchSet, points3DSet, HSet] = estimates(data);
+[H3, calibParams, p2, p3, matchSet, points3DSet, HSet] = estimates(data,calib);
 vis = p2(3,:) > 0;
 ind = 1:250;
 vis= ind(logical(vis));

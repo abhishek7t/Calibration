@@ -65,7 +65,9 @@ classdef Calibration
                 if isempty(points)
                     np(j).points = [];
                 else
-                    np(j).points = [points ones(length(points), 1)] * [H(1:3,1:3)';H(1:3,4)'] ;
+%                     np(j).points = [points ones(length(points), 1)] * [H(1:3,1:3)';H(1:3,4)'] ;
+                    np(j).points = [points ones(length(points), 1)] * H' ;
+                    np(j).points = np(j).points(:,1:3);
                 end
             end
             loc = np;
@@ -208,30 +210,43 @@ classdef Calibration
             err = norm(meanReprojectionError);
         end
         
-        %%
+        %% @ input R and T are as output by matlab stereo estimateCameraParameters function
+        % M = K * [R'  T] camera matrix
+        % returns undistorted reprojected image points
         function reproj = findReproj(X,R,T,K)
-            n = length(X);
+            [n,~] = size(X);
+            if length(T(1,:)) == 3
+                T = T';
+            end
             if n == 0
                 ME = MException('VerifyOutput:OutOfBounds', ...
              'empty X matrix');
                 throw(ME);
             end
-            M = K*[R T];
+            M = K*[R' T];
             reproj = M * [X ones(n,1)]';
             reproj = reproj ./ [reproj(3,:);reproj(3,:);reproj(3,:)];
             reproj = reproj(1:2,:)';
         end
         %%
-        function [params,estimationErrors] = stereoCalibrate(inlierPoints)
+        function [params,estimationErrors] = stereoCalibrate(inlierPoints,K1, K2, rad_dist1,rad_dist2)
             boardSize = [10 12];
             squareSize = 55;
             worldPoints = generateCheckerboardPoints(boardSize,squareSize);
             imageSize = [1080,1920];
 
-            [params,~,estimationErrors] = estimateCameraParameters(inlierPoints,worldPoints, ...
+            [params,~,estimationErrors] = estimateCameraParam(inlierPoints,worldPoints, ...
                                               'ImageSize',imageSize,'WorldUnits','mm',...
                                               'NumRadialDistortionCoefficients',3,...
-                                              'EstimateTangentialDistortion',false);
+                                              'EstimateTangentialDistortion',false...
+                                              ,'InitialIntrinsicMatrix1',K1,'InitialRadialDistortion1',rad_dist1...
+                                              ,'InitialIntrinsicMatrix2',K2,'InitialRadialDistortion2',rad_dist2);
+            
+%             [params,~,estimationErrors] = estimateCameraParameters(inlierPoints,worldPoints, ...
+%                                               'ImageSize',imageSize,'WorldUnits','mm',...
+%                                               'NumRadialDistortionCoefficients',3,...
+%                                               'EstimateTangentialDistortion',false...
+%                                             );
         end
         
         %% find frame number from point index
